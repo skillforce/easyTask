@@ -11,6 +11,9 @@
 // данных из фильтров
 
 import {useState} from "react";
+import { v4 } from 'uuid';
+import {createHeroes, heroesFilterChange} from "../../reducers/HeroesList-reducer";
+import {useDispatch} from "react-redux";
 
 const HeroesAddForm = () => {
 
@@ -18,9 +21,22 @@ const HeroesAddForm = () => {
     const[heroesDescription,setHeroesDescription]=useState('')
     const[heroesElement,setHeroesElement]=useState('')
 
+    const dispatch = useDispatch();
+
     const createUser =()=>{
-        console.log(heroesName,heroesDescription,heroesElement)
+        const newHeroes = {
+            id:v4(),
+            name:heroesName,
+            description:heroesDescription,
+            element:heroesElement
+        }
+        dispatch(createHeroes(newHeroes))
+        setHeroesName('')
+        setHeroesDescription('')
+        setHeroesElement('')
     }
+
+
 
     return (
         <form className="border p-4 shadow-lg rounded">

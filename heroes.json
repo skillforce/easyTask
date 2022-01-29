@@ -1,21 +1,39 @@
 {
   "heroes": [
     {
-      "id": 1,
-      "name": "Первый герой",
-      "description": "Первый герой в рейтинге!",
+      "id": "6ebf9e97-47a2-4763-8b09-5ce337368a35",
+      "name": "Denis",
+      "description": "edcscsdcsd",
       "element": "fire"
     },
     {
-      "id": 2,
-      "name": "Первый герой",
-      "description": "Первый герой в рейтинге!",
-      "element": "fire"
+      "id": "cfad491a-d5fb-4090-bbcc-54717e0c9513",
+      "name": "scsacsac",
+      "description": "scasacsacsa",
+      "element": "wind"
     },
     {
-      "id": 3,
-      "name": "Первый герой",
-      "description": "Первый герой в рейтинге!",
+      "id": "9e594421-3ed4-45e2-86ad-db438cd721fb",
+      "name": "sacsacsac",
+      "description": "scasacsac",
+      "element": "earth"
+    },
+    {
+      "id": "6f24fab0-702e-4472-8bdb-947b5a0e2e66",
+      "name": "Denis",
+      "description": "sdddddd",
+      "element": "water"
+    },
+    {
+      "id": "5188fe9f-5940-4909-92f1-7aa83e6ccf8b",
+      "name": "ecdcdscdscscsdc",
+      "description": "dcsdcsdcdscsd",
+      "element": "earth"
+    },
+    {
+      "id": "0c8cc3a9-feb9-466c-acd5-85af79e9aef9",
+      "name": "sacsacsa",
+      "description": "scacsacsac",
       "element": "fire"
     }
   ],

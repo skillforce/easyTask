@@ -1,14 +1,16 @@
 const initialState = {
     heroes: [],
     heroesLoadingStatus: 'idle',
-    filters: []
+    filters: 'all'
 }
 export const heroesListActionType = {
     DELETE_USER: 'HeroesList/DELETE_ITEM',
     HEROES_FETCHING: 'HeroesList/HEROES_FETCHING',
     HEROES_FETCHED: 'HeroesList/HEROES_FETCHED',
     HEROES_FETCHING_ERROR: 'HeroesList/HEROES_FETCH_ERROR',
-    HEROES_DELETE_SUCCESS: 'HeroesList/HEROES_DELETE_SUCCESS'
+    HEROES_DELETE_SUCCESS: 'HeroesList/HEROES_DELETE_SUCCESS',
+    HEROES_CREATE_USER: 'HeroesList/HEROES_CREATE_USER',
+    HEROES_CHANGE_FILTER: 'HeroesList/HEROES_CHANGE_FILTER'
 }
 
 export const heroesFetching = () => ({type: heroesListActionType.HEROES_FETCHING})
@@ -21,6 +23,11 @@ export const deleteHeroesAC = (id) => ({type: heroesListActionType.DELETE_USER, 
 
 export const deleteHeroesSuccess = () => ({type: heroesListActionType.HEROES_DELETE_SUCCESS})
 
+export const createHeroesSuccess = (newUser) => ({type: heroesListActionType.HEROES_CREATE_USER, newUser})
+
+
+export const heroesFilterChange = (newFilter) => ({type: heroesListActionType.HEROES_CHANGE_FILTER, newFilter})
+
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -28,8 +35,12 @@ const reducer = (state = initialState, action) => {
             return {...state, heroesLoadingStatus: 'loading'}
 
         case heroesListActionType.HEROES_FETCHED:
+            const modifyHeroes = action.payload.map(t => ({
+                ...t,
+                isVisible: t.element === state.filters || state.filters === 'all'
+            }))
             return {
-                ...state, heroes: action.payload, heroesLoadingStatus: 'idle'
+                ...state, heroes: modifyHeroes, heroesLoadingStatus: 'idle'
             }
         case heroesListActionType.HEROES_FETCHING_ERROR:
             return {
@@ -39,32 +50,32 @@ const reducer = (state = initialState, action) => {
             return {...state, heroes: state.heroes.filter(t => t.id !== action.id)}
         case heroesListActionType.HEROES_DELETE_SUCCESS:
             return {...state, heroesLoadingStatus: 'idle'}
+        case heroesListActionType.HEROES_CREATE_USER:
+            const newUserModify = {...action.newUser,isVisible:action.newUser.element===state.filters||state.filters === 'all'}
+            return {...state, heroes: [...state.heroes, newUserModify], heroesLoadingStatus: 'idle'}
+        case heroesListActionType.HEROES_CHANGE_FILTER:
+            return {...state,filters:action.newFilter, heroes: state.heroes.map(t=>({...t,isVisible:t.element === action.newFilter||action.newFilter==='all'}))}
         default:
             return state
     }
 }
 
 
-
-export const createHeroes =(id,name,description,element)=>{
-    return async dispatch=>{
+export const createHeroes = (newHeroes) => {
+    return async dispatch => {
         dispatch(heroesFetching());
         try {
             await fetch(`http://localhost:3001/heroes`, {
                 method: 'POST',
-                body:{
-                    id,
-                    name,
-                    description,
-                    element
-                }
+                body: JSON.stringify(newHeroes),
+                headers: {'Content-Type': 'application/json'}
             });
-        }catch (err){
+            dispatch(createHeroesSuccess(newHeroes))
+        } catch (err) {
             dispatch(heroesFetchingError);
         }
     }
 }
-
 
 
 export const deleteHeroes = (id) => {
