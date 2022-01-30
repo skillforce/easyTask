@@ -1,4 +1,3 @@
-
 // Задача для этого компонента:
 // Фильтры должны формироваться на основании загруженных данных
 // Фильтры должны отображать только нужных героев при выборе
@@ -7,20 +6,36 @@
 // Представьте, что вы попросили бэкенд-разработчика об этом
 
 
-
-import {heroesFilterChange} from "../../reducers/HeroesList-reducer";
-import {useDispatch} from "react-redux";
-
-
+import reducer, {heroesFilterChange} from "../../reducers/HeroesList-reducer";
+import {useDispatch, useSelector} from "react-redux";
 
 
 const HeroesFilters = () => {
 
-const dispatch = useDispatch();
-
-    const changeUserFilter =(newFilter)=>{
+    const dispatch = useDispatch();
+    const filterList =useSelector(state => state.filterList)
+    const changeUserFilter = (newFilter) => {
         dispatch(heroesFilterChange(newFilter))
     }
+
+
+    const btnView = (filterName) => {
+        switch (filterName) {
+            case 'all':
+                return <button className="btn btn-outline-dark active"
+                               onClick={() => changeUserFilter('all')}>Все</button>
+            case 'fire':
+                return <button className="btn btn-danger" onClick={() => changeUserFilter('fire')}>Огонь</button>
+            case 'water':
+                return <button className="btn btn-primary" onClick={() => changeUserFilter('water')}>Вода</button>
+            case 'wind':
+                return <button className="btn btn-success" onClick={() => changeUserFilter('wind')}>Ветер</button>
+            case 'earth':
+                return <button className="btn btn-secondary" onClick={() => changeUserFilter('earth')}>Земля</button>
+        }
+    }
+
+    const uiBtn = filterList.map(t=>btnView(t))
 
 
     return (
@@ -28,11 +43,7 @@ const dispatch = useDispatch();
             <div className="card-body">
                 <p className="card-text">Отфильтруйте героев по элементам</p>
                 <div className="btn-group">
-                    <button className="btn btn-outline-dark active" onClick={()=>changeUserFilter('all')}>Все</button>
-                    <button className="btn btn-danger" onClick={()=>changeUserFilter('fire')}>Огонь</button>
-                    <button className="btn btn-primary" onClick={()=>changeUserFilter('water')}>Вода</button>
-                    <button className="btn btn-success" onClick={()=>changeUserFilter('wind')}>Ветер</button>
-                    <button className="btn btn-secondary" onClick={()=>changeUserFilter('earth')}>Земля</button>
+                    {uiBtn}
                 </div>
             </div>
         </div>

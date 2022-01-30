@@ -13,12 +13,6 @@
       "element": "wind"
     },
     {
-      "id": "9e594421-3ed4-45e2-86ad-db438cd721fb",
-      "name": "sacsacsac",
-      "description": "scasacsac",
-      "element": "earth"
-    },
-    {
       "id": "6f24fab0-702e-4472-8bdb-947b5a0e2e66",
       "name": "Denis",
       "description": "sdddddd",
@@ -29,12 +23,6 @@
       "name": "ecdcdscdscscsdc",
       "description": "dcsdcsdcdscsd",
       "element": "earth"
-    },
-    {
-      "id": "0c8cc3a9-feb9-466c-acd5-85af79e9aef9",
-      "name": "sacsacsa",
-      "description": "scacsacsac",
-      "element": "fire"
     }
   ],
   "filters": [

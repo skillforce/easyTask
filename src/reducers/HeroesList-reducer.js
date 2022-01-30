@@ -1,7 +1,8 @@
 const initialState = {
     heroes: [],
     heroesLoadingStatus: 'idle',
-    filters: 'all'
+    filters: 'all',
+    filterList: []
 }
 export const heroesListActionType = {
     DELETE_USER: 'HeroesList/DELETE_ITEM',
@@ -10,7 +11,8 @@ export const heroesListActionType = {
     HEROES_FETCHING_ERROR: 'HeroesList/HEROES_FETCH_ERROR',
     HEROES_DELETE_SUCCESS: 'HeroesList/HEROES_DELETE_SUCCESS',
     HEROES_CREATE_USER: 'HeroesList/HEROES_CREATE_USER',
-    HEROES_CHANGE_FILTER: 'HeroesList/HEROES_CHANGE_FILTER'
+    HEROES_CHANGE_FILTER: 'HeroesList/HEROES_CHANGE_FILTER',
+    FETCH_FILTER_LIST_SUCCESS: 'HeroesList/FETCH_FILTER_LIST_SUCCESS'
 }
 
 export const heroesFetching = () => ({type: heroesListActionType.HEROES_FETCHING})
@@ -27,6 +29,12 @@ export const createHeroesSuccess = (newUser) => ({type: heroesListActionType.HER
 
 
 export const heroesFilterChange = (newFilter) => ({type: heroesListActionType.HEROES_CHANGE_FILTER, newFilter})
+
+
+export const fetchFilterListSuccess = (filterList) => ({
+    type: heroesListActionType.FETCH_FILTER_LIST_SUCCESS,
+    filterList
+})
 
 
 const reducer = (state = initialState, action) => {
@@ -51,10 +59,22 @@ const reducer = (state = initialState, action) => {
         case heroesListActionType.HEROES_DELETE_SUCCESS:
             return {...state, heroesLoadingStatus: 'idle'}
         case heroesListActionType.HEROES_CREATE_USER:
-            const newUserModify = {...action.newUser,isVisible:action.newUser.element===state.filters||state.filters === 'all'}
+            const newUserModify = {
+                ...action.newUser,
+                isVisible: action.newUser.element === state.filters || state.filters === 'all'
+            }
             return {...state, heroes: [...state.heroes, newUserModify], heroesLoadingStatus: 'idle'}
         case heroesListActionType.HEROES_CHANGE_FILTER:
-            return {...state,filters:action.newFilter, heroes: state.heroes.map(t=>({...t,isVisible:t.element === action.newFilter||action.newFilter==='all'}))}
+            return {
+                ...state,
+                filters: action.newFilter,
+                heroes: state.heroes.map(t => ({
+                    ...t,
+                    isVisible: t.element === action.newFilter || action.newFilter === 'all'
+                }))
+            }
+        case heroesListActionType.FETCH_FILTER_LIST_SUCCESS:
+            return {...state, filterList: [...action.filterList]}
         default:
             return state
     }
@@ -93,17 +113,40 @@ export const deleteHeroes = (id) => {
     }
 }
 
-export const heroesInit = () => {
+
+export const filterListInit = () => {
+    return async dispatch => {
+        const res = await fetch(`http://localhost:3001/filters`, {
+            method: 'GET',
+            body: null,
+            headers: {'Content-Type': 'application/json'}
+        });
+        const newFilterList = await res.json()
+        console.log(newFilterList)
+        dispatch(fetchFilterListSuccess(newFilterList))
+    }
+}
+export const heroesListInit = () => {
+    return async dispatch => {
+        const res = await fetch(`http://localhost:3001/heroes`, {
+            method: 'GET',
+            body: null,
+            headers: {'Content-Type': 'application/json'}
+        });
+        const newHeroesList = await res.json()
+        dispatch(heroesFetched(newHeroesList))
+
+    }
+}
+
+
+export const AppInit = () => {
     return async dispatch => {
         dispatch(heroesFetching());
         try {
-            const res = await fetch(`http://localhost:3001/heroes`, {
-                method: 'GET',
-                body: null,
-                headers: {'Content-Type': 'application/json'}
-            });
-            const data = await res.json()
-            dispatch(heroesFetched(data))
+            dispatch(heroesListInit())
+            dispatch(filterListInit())
+            dispatch(heroesFetched())
         } catch (err) {
             dispatch(heroesFetchingError);
         }
