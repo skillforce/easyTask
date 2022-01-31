@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
-import {AppInit} from "../../reducers/HeroesList-reducer";
+import {heroesInit} from "../../reducers/heroesSlice";
 
 // Задача для этого компонента:
 // При клике на "крестик" идет удаление персонажа из общего состояния
@@ -10,11 +10,12 @@ import {AppInit} from "../../reducers/HeroesList-reducer";
 // Удаление идет и с json файла при помощи метода DELETE
 
 const HeroesList = () => {
-    const {heroes, heroesLoadingStatus} = useSelector(state => state);
+    const {heroes, heroesLoadingStatus} = useSelector(state => state.heroes);
     const dispatch = useDispatch();
 
+
     useEffect(() => {
-        dispatch(AppInit())
+        dispatch(heroesInit())
         // eslint-disable-next-line
     }, []);
 
@@ -25,7 +26,6 @@ const HeroesList = () => {
     }
 
     const renderHeroesList = (arr) => {
-        console.log(arr)
         if (arr.length === 0) {
             return <h5 className="text-center mt-5">Героев пока нет</h5>
         }

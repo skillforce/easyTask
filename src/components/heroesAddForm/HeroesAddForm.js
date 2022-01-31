@@ -12,8 +12,8 @@
 
 import {useState} from "react";
 import { v4 } from 'uuid';
-import {createHeroes, heroesFilterChange} from "../../reducers/HeroesList-reducer";
 import {useDispatch} from "react-redux";
+import {createHeroes} from "../../reducers/heroesSlice";
 
 const HeroesAddForm = () => {
 
@@ -30,7 +30,7 @@ const HeroesAddForm = () => {
             description:heroesDescription,
             element:heroesElement
         }
-        dispatch(createHeroes(newHeroes))
+        dispatch(createHeroes({newHeroes}))
         setHeroesName('')
         setHeroesDescription('')
         setHeroesElement('')

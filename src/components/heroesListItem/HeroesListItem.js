@@ -1,5 +1,6 @@
 import {useDispatch} from "react-redux";
-import {deleteHeroes} from "../../reducers/HeroesList-reducer";
+import {deleteHeroes} from "../../reducers/heroesSlice";
+
 
 const HeroesListItem = (props) => {
 
@@ -40,7 +41,7 @@ const dispatch = useDispatch()
                 </div>
                 <span className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
                 <button type="button" className="btn-close btn-close" aria-label="Close"
-                        onClick={() => dispatch(deleteHeroes(props.id))}>
+                        onClick={() => dispatch(deleteHeroes({id:props.id}))}>
                 </button>
             </span>
             </li>}

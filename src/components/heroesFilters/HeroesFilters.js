@@ -5,18 +5,26 @@
 // Изменять json-файл для удобства МОЖНО!
 // Представьте, что вы попросили бэкенд-разработчика об этом
 
-
-import reducer, {heroesFilterChange} from "../../reducers/HeroesList-reducer";
 import {useDispatch, useSelector} from "react-redux";
+
+import {useEffect} from "react";
+import {changeFilter, filterListInit} from "../../reducers/heroesSlice";
 
 
 const HeroesFilters = () => {
 
+    useEffect(()=>{
+        dispatch(filterListInit())
+    },[])
+
+
     const dispatch = useDispatch();
-    const filterList =useSelector(state => state.filterList)
+    const {filterList} =useSelector(state => state.heroes)
     const changeUserFilter = (newFilter) => {
-        dispatch(heroesFilterChange(newFilter))
+        dispatch(changeFilter({newFilter}))
     }
+
+
 
 
     const btnView = (filterName) => {
@@ -43,7 +51,7 @@ const HeroesFilters = () => {
             <div className="card-body">
                 <p className="card-text">Отфильтруйте героев по элементам</p>
                 <div className="btn-group">
-                    {uiBtn}
+                    {uiBtn && uiBtn}
                 </div>
             </div>
         </div>
