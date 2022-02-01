@@ -1,14 +1,33 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 
-const initialState = {
+export type NewHeroes = {
+    id: string,
+    name: string,
+    description: string,
+    element: string
+}
+export type ModifyHeroes = NewHeroes & { isVisible: boolean }
+
+export type FilterList = 'fire' | 'water' | 'wind' | 'earth' | 'all'
+
+type InitialState = {
+    heroes: ModifyHeroes[]
+    heroesLoadingStatus: string
+    filters: string
+    filterList: FilterList[]
+}
+
+
+const initialState: InitialState = {
     heroes: [],
     heroesLoadingStatus: 'idle',
     filters: 'all',
     filterList: []
 }
 
-export const filterListInit = createAsyncThunk('filters/filtersInit',async (arg,{dispatch,rejectWithValue}) => {
+
+export const filterListInit = createAsyncThunk('filters/filtersInit', async (arg, {dispatch, rejectWithValue}) => {
     dispatch(fetchingHeroes());
     try {
         const res = await fetch(`http://localhost:3001/filters`, {
@@ -17,8 +36,8 @@ export const filterListInit = createAsyncThunk('filters/filtersInit',async (arg,
             headers: {'Content-Type': 'application/json'}
         });
         return await res.json()
-    }catch(err){
-        dispatch(fetchingHeroesError({}))
+    } catch (err) {
+        dispatch(fetchingHeroesError())
         return rejectWithValue(null)
     }
 });
@@ -32,32 +51,33 @@ export const heroesInit = createAsyncThunk('heroes/HeroesInit', async (arg, {dis
             body: null,
             headers: {'Content-Type': 'application/json'}
         });
-        const heroes =  await res.json();
-        console.log(heroes)
-        return heroes
+        return await res.json();
     } catch (err) {
-        dispatch(fetchingHeroesError({}))
+        dispatch(fetchingHeroesError())
         return rejectWithValue(null)
     }
 
 });
 
 
-export const deleteHeroes = createAsyncThunk('heroes/deleteHeroes', async ({id}, {dispatch, rejectWithValue}) => {
+export const deleteHeroes = createAsyncThunk('heroes/deleteHeroes', async (arg: { id: string }, {
+    dispatch,
+    rejectWithValue
+}) => {
     dispatch(fetchingHeroes());
     try {
-        await fetch(`http://localhost:3001/heroes/${id}`, {
+        await fetch(`http://localhost:3001/heroes/${arg.id}`, {
             method: 'DELETE',
         });
-        return id
+        return arg.id
     } catch (err) {
-        dispatch(fetchingHeroesError({}))
+        dispatch(fetchingHeroesError())
         return rejectWithValue(null)
     }
 });
 
 
-export const createHeroes = createAsyncThunk('heroes/createHeroes', async ({newHeroes}, {
+export const createHeroes = createAsyncThunk<any, { newHeroes: NewHeroes }>('heroes/createHeroes', async ({newHeroes}: { newHeroes: NewHeroes }, {
     dispatch,
     rejectWithValue
 }) => {
@@ -68,9 +88,10 @@ export const createHeroes = createAsyncThunk('heroes/createHeroes', async ({newH
             body: JSON.stringify(newHeroes),
             headers: {'Content-Type': 'application/json'}
         });
+
         return newHeroes
     } catch (err) {
-        dispatch(fetchingHeroesError({}))
+        dispatch(fetchingHeroesError())
         return rejectWithValue(null)
     }
 });
@@ -80,13 +101,12 @@ const heroesSlice = createSlice({
     name: 'heroesSlice',
     initialState,
     reducers: {
-        changeFilter:(state,action)=>{
+        changeFilter: (state, action: PayloadAction<{ newFilter: string }>) => {
             state.filters = action.payload.newFilter
-            const modifyHeroes = state.heroes.map(t => ({
+            state.heroes = state.heroes.map((t: NewHeroes) => ({
                 ...t,
                 isVisible: t.element === action.payload.newFilter || action.payload.newFilter === 'all'
-            }))
-            state.heroes =modifyHeroes;
+            }));
         },
         fetchingHeroes: (state) => {
             state.heroesLoadingStatus = 'loading';
@@ -97,15 +117,13 @@ const heroesSlice = createSlice({
     },
     extraReducers: builder => {
         builder.addCase(heroesInit.fulfilled, (state, action) => {
-            const modifyHeroes = action.payload.map(t => ({
+            state.heroes = action.payload.map((t: NewHeroes) => ({
                 ...t,
                 isVisible: t.element === state.filters || state.filters === 'all'
-            }))
-            state.heroes = modifyHeroes;
+            }));
             state.heroesLoadingStatus = 'idle';
         });
         builder.addCase(deleteHeroes.fulfilled, (state, action) => {
-            debugger
             const index = state.heroes.findIndex(t => t.id === action.payload);
             state.heroes.splice(index, 1);
             state.heroesLoadingStatus = 'idle'
@@ -118,7 +136,7 @@ const heroesSlice = createSlice({
             state.heroes = [...state.heroes, newUserModify];
             state.heroesLoadingStatus = 'idle';
         });
-        builder.addCase(filterListInit.fulfilled,(state,action)=>{
+        builder.addCase(filterListInit.fulfilled, (state, action) => {
             state.filterList = action.payload;
             state.heroesLoadingStatus = 'idle';
         });

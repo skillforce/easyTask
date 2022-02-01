@@ -1,14 +1,7 @@
-// Задача для этого компонента:
-// Фильтры должны формироваться на основании загруженных данных
-// Фильтры должны отображать только нужных героев при выборе
-// Активный фильтр имеет класс active
-// Изменять json-файл для удобства МОЖНО!
-// Представьте, что вы попросили бэкенд-разработчика об этом
-
-import {useDispatch, useSelector} from "react-redux";
-
-import {useEffect} from "react";
-import {changeFilter, filterListInit} from "../../reducers/heroesSlice";
+import {useDispatch} from 'react-redux';
+import {useEffect} from 'react';
+import {changeFilter, FilterList, filterListInit} from '../../reducers/heroesSlice';
+import {useAppSelector} from '../../store/storeToolKit';
 
 
 const HeroesFilters = () => {
@@ -19,15 +12,15 @@ const HeroesFilters = () => {
 
 
     const dispatch = useDispatch();
-    const {filterList} =useSelector(state => state.heroes)
-    const changeUserFilter = (newFilter) => {
+    const filterList =useAppSelector(state => state.heroes.filterList)
+    const changeUserFilter = (newFilter:FilterList) => {
         dispatch(changeFilter({newFilter}))
     }
 
 
 
 
-    const btnView = (filterName) => {
+    const btnView = (filterName:FilterList) => {
         switch (filterName) {
             case 'all':
                 return <button className="btn btn-outline-dark active"

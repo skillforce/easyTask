@@ -1,10 +1,10 @@
-import {useDispatch} from "react-redux";
-import {deleteHeroes} from "../../reducers/heroesSlice";
+import {useDispatch} from 'react-redux';
+import {deleteHeroes, ModifyHeroes} from '../../reducers/heroesSlice';
 
 
-const HeroesListItem = (props) => {
+const HeroesListItem = (props: ModifyHeroes) => {
 
-const dispatch = useDispatch()
+    const dispatch = useDispatch()
 
 
     let elementClassName;
@@ -28,7 +28,7 @@ const dispatch = useDispatch()
 
     return (
         <>
-            {props.isVisible===true && <li
+            {props.isVisible && <li
                 className={`card flex-row mb-4 shadow-lg text-white ${elementClassName}`}>
                 <img src="http://www.stpaulsteinbach.org/wp-content/uploads/2014/09/unknown-hero.jpg"
                      className="img-fluid w-25 d-inline"
@@ -41,7 +41,7 @@ const dispatch = useDispatch()
                 </div>
                 <span className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
                 <button type="button" className="btn-close btn-close" aria-label="Close"
-                        onClick={() => dispatch(deleteHeroes({id:props.id}))}>
+                        onClick={() => dispatch(deleteHeroes({id: props.id}))}>
                 </button>
             </span>
             </li>}
