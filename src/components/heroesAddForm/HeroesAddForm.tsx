@@ -1,7 +1,7 @@
-import {useState} from "react";
-import { v4 } from 'uuid';
-import {useDispatch} from "react-redux";
-import {createHeroes} from "../../reducers/heroesSlice";
+import {useState} from 'react';
+import {v4} from 'uuid';
+import {useCreateHeroMutation} from '../../API/apiSlice';
+import Spinner from '../spinner/Spinner';
 
 const HeroesAddForm = () => {
 
@@ -9,7 +9,8 @@ const HeroesAddForm = () => {
     const[heroesDescription,setHeroesDescription]=useState('')
     const[heroesElement,setHeroesElement]=useState('')
 
-    const dispatch = useDispatch();
+    const [createHero,{isLoading,isError}]=useCreateHeroMutation();
+
 
     const createUser =()=>{
         const newHeroes = {
@@ -18,14 +19,18 @@ const HeroesAddForm = () => {
             description:heroesDescription,
             element:heroesElement
         }
-        dispatch(createHeroes({newHeroes}))
+        createHero(newHeroes).unwrap()
         setHeroesName('')
         setHeroesDescription('')
         setHeroesElement('')
     }
 
 
-
+    if (isLoading) {
+        return <Spinner/>;
+    } else if (isError) {
+        return <h5 className="text-center mt-5">Ошибка загрузки</h5>
+    }
     return (
         <form className="border p-4 shadow-lg rounded">
             <div className="mb-3">

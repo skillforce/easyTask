@@ -1,15 +1,14 @@
-import {useDispatch} from 'react-redux';
-import {deleteHeroes, ModifyHeroes} from '../../reducers/heroesSlice';
+import {ModifyHeroes} from '../../reducers/heroesSlice';
+import {useDeleteHeroMutation} from '../../API/apiSlice';
 
 
-const HeroesListItem = (props: ModifyHeroes) => {
+const HeroesListItem = ({name,description,id,element,isVisible}: ModifyHeroes) => {
 
-    const dispatch = useDispatch()
-
+    const [deleteHero,{isLoading}]=useDeleteHeroMutation();
 
     let elementClassName;
 
-    switch (props.element) {
+    switch (element) {
         case 'fire':
             elementClassName = 'bg-danger bg-gradient';
             break;
@@ -26,9 +25,14 @@ const HeroesListItem = (props: ModifyHeroes) => {
             elementClassName = 'bg-warning bg-gradient';
     }
 
+    const deleteHeroHandler =() =>{
+        deleteHero(id).unwrap()
+    }
+
+
     return (
         <>
-            {props.isVisible && <li
+            {isVisible && <li
                 className={`card flex-row mb-4 shadow-lg text-white ${elementClassName}`}>
                 <img src="http://www.stpaulsteinbach.org/wp-content/uploads/2014/09/unknown-hero.jpg"
                      className="img-fluid w-25 d-inline"
@@ -36,12 +40,12 @@ const HeroesListItem = (props: ModifyHeroes) => {
                      style={{'objectFit': 'cover'}}/>
                 <div className="card-body">
 
-                    <h3 className="card-title">{props.name}</h3>
-                    <p className="card-text">{props.description}</p>
+                    <h3 className="card-title">{name}</h3>
+                    <p className="card-text">{description}</p>
                 </div>
                 <span className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
                 <button type="button" className="btn-close btn-close" aria-label="Close"
-                        onClick={() => dispatch(deleteHeroes({id: props.id}))}>
+                        onClick={deleteHeroHandler}>
                 </button>
             </span>
             </li>}

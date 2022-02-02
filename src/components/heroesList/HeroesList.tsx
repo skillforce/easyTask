@@ -1,29 +1,28 @@
-import {useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
 import Spinner from '../spinner/Spinner';
-import {heroesInit, ModifyHeroes} from '../../reducers/heroesSlice';
+import {ModifyHeroes} from '../../reducers/heroesSlice';
 import HeroesListItem from '../heroesListItem/HeroesListItem';
-import {RootState, useAppDispatch, useAppSelector} from '../../store/storeToolKit';
+import {useGetHeroesQuery} from '../../API/apiSlice';
+import {useAppSelector} from '../../store/storeToolKit';
 
-// Задача для этого компонента:
-// При клике на "крестик" идет удаление персонажа из общего состояния
-// Усложненная задача:
-// Удаление идет и с json файла при помощи метода DELETE
 
 const HeroesList = () => {
-    const heroes = useAppSelector(state => state.heroes.heroes);
-    const heroesLoadingStatus = useAppSelector(state => state.heroes.heroesLoadingStatus)
-    const dispatch = useAppDispatch();
+    const {
+        data: defaultHeroes = [],
+        error,
+        isError,
+        isLoading
+    } = useGetHeroesQuery();
+    const actualFilter = useAppSelector(state => state.heroes.actualFilter)
+
+    const modifyHeroes: ModifyHeroes[] = defaultHeroes.map(t => ({
+        ...t,
+        isVisible: t.element === actualFilter || actualFilter === 'all'
+    }))
 
 
-    useEffect(() => {
-        dispatch(heroesInit())
-        // eslint-disable-next-line
-    }, []);
-
-    if (heroesLoadingStatus === 'loading') {
+    if (isLoading) {
         return <Spinner/>;
-    } else if (heroesLoadingStatus === 'error') {
+    } else if (isError) {
         return <h5 className="text-center mt-5">Ошибка загрузки</h5>
     }
 
@@ -37,7 +36,7 @@ const HeroesList = () => {
         })
     }
 
-    const elements = renderHeroesList(heroes);
+    const elements = renderHeroesList(modifyHeroes);
     return (
         <ul>
             {elements}

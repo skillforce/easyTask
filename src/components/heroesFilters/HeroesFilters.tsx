@@ -1,26 +1,28 @@
 import {useDispatch} from 'react-redux';
-import {useEffect} from 'react';
-import {changeFilter, FilterList, filterListInit} from '../../reducers/heroesSlice';
-import {useAppSelector} from '../../store/storeToolKit';
+import {changeFilter, FilterList} from '../../reducers/heroesSlice';
+import {useGetFilterListQuery} from '../../API/apiSlice';
+import Spinner from '../spinner/Spinner';
 
 
 const HeroesFilters = () => {
 
-    useEffect(()=>{
-        dispatch(filterListInit())
-    },[])
+
+    const {
+        data: filterList=[],
+        isLoading,
+        isError
+    } = useGetFilterListQuery()
+
 
 
     const dispatch = useDispatch();
-    const filterList =useAppSelector(state => state.heroes.filterList)
-    const changeUserFilter = (newFilter:FilterList) => {
+
+    const changeUserFilter = (newFilter: FilterList) => {
         dispatch(changeFilter({newFilter}))
     }
 
 
-
-
-    const btnView = (filterName:FilterList) => {
+    const btnView = (filterName: FilterList) => {
         switch (filterName) {
             case 'all':
                 return <button className="btn btn-outline-dark active"
@@ -36,9 +38,14 @@ const HeroesFilters = () => {
         }
     }
 
-    const uiBtn = filterList.map(t=>btnView(t))
+    const uiBtn = filterList.map(t => btnView(t))
 
 
+    if (isLoading) {
+        return <Spinner/>;
+    } else if (isError) {
+        return <h5 className="text-center mt-5">Ошибка загрузки</h5>
+    }
     return (
         <div className="card shadow-lg mt-4">
             <div className="card-body">
