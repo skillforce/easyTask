@@ -2,17 +2,17 @@ import {useDispatch} from 'react-redux';
 import {changeFilter, FilterList} from '../../reducers/heroesSlice';
 import {useGetFilterListQuery} from '../../API/apiSlice';
 import Spinner from '../spinner/Spinner';
+import {ErrorHandler} from '../errorHandler/ErrorHandler';
 
 
 const HeroesFilters = () => {
 
 
     const {
-        data: filterList=[],
+        data: filterList = [],
         isLoading,
         isError
     } = useGetFilterListQuery()
-
 
 
     const dispatch = useDispatch();
@@ -41,21 +41,18 @@ const HeroesFilters = () => {
     const uiBtn = filterList.map(t => btnView(t))
 
 
-    if (isLoading) {
-        return <Spinner/>;
-    } else if (isError) {
-        return <h5 className="text-center mt-5">Ошибка загрузки</h5>
-    }
     return (
-        <div className="card shadow-lg mt-4">
+    <>
+        {!isLoading && !isError && <div className="card shadow-lg mt-4">
             <div className="card-body">
                 <p className="card-text">Отфильтруйте героев по элементам</p>
                 <div className="btn-group">
                     {uiBtn && uiBtn}
                 </div>
             </div>
-        </div>
-    )
+        </div>}
+        {ErrorHandler(isLoading, isError)}
+    </>)
 }
 
 export default HeroesFilters;
