@@ -1,25 +1,22 @@
-import Spinner from '../spinner/Spinner';
-import {ModifyHeroes} from '../../reducers/heroesSlice';
 import HeroesListItem from '../heroesListItem/HeroesListItem';
-import {useGetHeroesQuery} from '../../API/apiSlice';
-import {useAppSelector} from '../../store/storeToolKit';
 import {ErrorHandler} from '../errorHandler/ErrorHandler';
+import Filter from '../../stores/filter';
+import Heroes, {ModifyHeroes} from '../../stores/heroes';
+import {observer} from 'mobx-react-lite'
+
+const HeroesList = observer(() => {
+
+    const defaultHeroes = Heroes.heroes
+    const isLoading = Heroes.heroesFetchStatus === 'loading';
+    const isError = Heroes.heroesFetchStatus === 'error';
 
 
-const HeroesList = () => {
-    const {
-        data: defaultHeroes = [],
-        error,
-        isError,
-        isLoading
-    } = useGetHeroesQuery();
-    const actualFilter = useAppSelector(state => state.heroes.actualFilter)
+    const actualFilter = Filter.actualFilter
 
     const modifyHeroes: ModifyHeroes[] = defaultHeroes.map(t => ({
         ...t,
         isVisible: t.element === actualFilter || actualFilter === 'all'
     }))
-
 
 
     const renderHeroesList = (arr: ModifyHeroes[]) => {
@@ -36,9 +33,9 @@ const HeroesList = () => {
     return (
         <ul>
             {!isError && elements}
-            {ErrorHandler(isLoading,isError)}
+            {ErrorHandler(isLoading, isError)}
         </ul>
     )
-}
+})
 
 export default HeroesList;

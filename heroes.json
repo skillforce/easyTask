@@ -1,27 +1,15 @@
 {
   "heroes": [
     {
-      "id": "70e3649a-7fa6-4449-b507-1e3556498dac",
-      "name": "Denis",
-      "description": "s",
+      "id": "831b7cc9-4f6f-4b33-a146-16a4ec49f3bd",
+      "name": "Pet Hotel",
+      "description": "xccc",
       "element": "fire"
     },
     {
-      "id": "a19437df-faa0-4adb-95a5-8099e392794d",
-      "name": "Denis",
-      "description": "ddd",
-      "element": "water"
-    },
-    {
-      "id": "020a57a6-72c3-4d82-a01e-b362e231ec1a",
-      "name": "Denis",
-      "description": "dcsdscdsc",
-      "element": "fire"
-    },
-    {
-      "id": "2c6201fc-a8f6-4eb3-9578-a4f10ca89699",
-      "name": "dddddd",
-      "description": "dddddd",
+      "id": "6f00f00e-e80e-4232-84f9-597ed1a5cd3a",
+      "name": "lalala",
+      "description": "rthb",
       "element": "wind"
     }
   ],

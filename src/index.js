@@ -1,13 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
 import App from './components/app/App';
 import './styles/index.scss';
-import {store} from "./store/storeToolKit";
+import {Provider} from "mobx-react";
+import Filter from './stores/filter';
+import Heroes from './stores/heroes';
+
+
+const stores ={
+    Filter,
+    Heroes
+}
+
 
 ReactDOM.render(
     <React.StrictMode>
-        <Provider store={store}>
+        <Provider {...stores}>
             <App/>
         </Provider>
     </React.StrictMode>,

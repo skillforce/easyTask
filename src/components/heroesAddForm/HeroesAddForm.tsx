@@ -1,16 +1,18 @@
 import {useState} from 'react';
 import {v4} from 'uuid';
-import {useCreateHeroMutation} from '../../API/apiSlice';
-import Spinner from '../spinner/Spinner';
 import {ErrorHandler} from '../errorHandler/ErrorHandler';
+import Heroes from '../../stores/heroes';
+import {observer} from 'mobx-react-lite';
 
-const HeroesAddForm = () => {
+const HeroesAddForm = observer(() => {
 
     const[heroesName,setHeroesName]=useState('')
     const[heroesDescription,setHeroesDescription]=useState('')
     const[heroesElement,setHeroesElement]=useState('')
+    const isLoading = Heroes.heroesFetchStatus === 'loading';
+    const isError = Heroes.heroesFetchStatus === 'error';
 
-    const [createHero,{isLoading,isError}]=useCreateHeroMutation();
+
 
 
     const createUser =()=>{
@@ -20,7 +22,7 @@ const HeroesAddForm = () => {
             description:heroesDescription,
             element:heroesElement
         }
-        createHero(newHeroes).unwrap()
+        Heroes.createHeroes(newHeroes)
         setHeroesName('')
         setHeroesDescription('')
         setHeroesElement('')
@@ -79,6 +81,6 @@ const HeroesAddForm = () => {
             {ErrorHandler(isLoading,isError)}
         </form>
     )
-}
+});
 
 export default HeroesAddForm;

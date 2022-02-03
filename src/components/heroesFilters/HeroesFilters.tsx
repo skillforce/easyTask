@@ -1,25 +1,20 @@
-import {useDispatch} from 'react-redux';
-import {changeFilter, FilterList} from '../../reducers/heroesSlice';
-import {useGetFilterListQuery} from '../../API/apiSlice';
-import Spinner from '../spinner/Spinner';
+
+import storeMobX from '../../stores/filter';
 import {ErrorHandler} from '../errorHandler/ErrorHandler';
+import Filter from '../../stores/filter';
+import {FilterList} from '../../stores/heroes';
+import {observer} from 'mobx-react-lite';
 
 
-const HeroesFilters = () => {
+const HeroesFilters = observer(() => {
 
-
-    const {
-        data: filterList = [],
-        isLoading,
-        isError
-    } = useGetFilterListQuery()
-
-
-    const dispatch = useDispatch();
-
+    const filterList = Filter.filtersList
+    const isLoading = Filter.filterFetchStatus === 'loading';
+    const isError = Filter.filterFetchStatus === 'error';
     const changeUserFilter = (newFilter: FilterList) => {
-        dispatch(changeFilter({newFilter}))
+        storeMobX.changeFilter(newFilter)
     }
+
 
 
     const btnView = (filterName: FilterList) => {
@@ -53,6 +48,6 @@ const HeroesFilters = () => {
         </div>}
         {ErrorHandler(isLoading, isError)}
     </>)
-}
+});
 
 export default HeroesFilters;

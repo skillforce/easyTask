@@ -1,10 +1,8 @@
-import {ModifyHeroes} from '../../reducers/heroesSlice';
-import {useDeleteHeroMutation} from '../../API/apiSlice';
+import Heroes, {ModifyHeroes} from '../../stores/heroes';
 
 
 const HeroesListItem = ({name,description,id,element,isVisible}: ModifyHeroes) => {
 
-    const [deleteHero,{isLoading}]=useDeleteHeroMutation();
 
     let elementClassName;
 
@@ -26,7 +24,7 @@ const HeroesListItem = ({name,description,id,element,isVisible}: ModifyHeroes) =
     }
 
     const deleteHeroHandler =() =>{
-        deleteHero(id).unwrap()
+        Heroes.deleteHeroes(id);
     }
 
 
