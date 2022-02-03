@@ -17,23 +17,23 @@ const HeroesFilters = observer(() => {
 
 
 
-    const btnView = (filterName: FilterList) => {
+    const btnView = (filterName: FilterList, id:number) => {
         switch (filterName) {
             case 'all':
-                return <button className="btn btn-outline-dark active"
+                return <button key={id}  className="btn btn-outline-dark active"
                                onClick={() => changeUserFilter('all')}>Все</button>
             case 'fire':
-                return <button className="btn btn-danger" onClick={() => changeUserFilter('fire')}>Огонь</button>
+                return <button key={id} className="btn btn-danger" onClick={() => changeUserFilter('fire')}>Огонь</button>
             case 'water':
-                return <button className="btn btn-primary" onClick={() => changeUserFilter('water')}>Вода</button>
+                return <button key={id} className="btn btn-primary" onClick={() => changeUserFilter('water')}>Вода</button>
             case 'wind':
-                return <button className="btn btn-success" onClick={() => changeUserFilter('wind')}>Ветер</button>
+                return <button key={id} className="btn btn-success" onClick={() => changeUserFilter('wind')}>Ветер</button>
             case 'earth':
-                return <button className="btn btn-secondary" onClick={() => changeUserFilter('earth')}>Земля</button>
+                return <button key={id} className="btn btn-secondary" onClick={() => changeUserFilter('earth')}>Земля</button>
         }
     }
 
-    const uiBtn = filterList.map(t => btnView(t))
+    const uiBtn = filterList.map((t,i) => btnView(t,i))
 
 
     return (
